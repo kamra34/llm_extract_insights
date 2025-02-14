@@ -1,40 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { fetchItems, createItem, deleteItem } from "./api";
-import ItemList from "./components/ItemList";
-import AddItemForm from "./components/AddItemForm";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import HomePage from "./pages/HomePage";
+import ChatPage from "./pages/ChatPage";
+import InsightsPage from "./pages/InsightsPage";
+import './styles/App.css';// Add global styles
 
-function App() {
-    const [items, setItems] = useState([]);
-
-    // Fetch items from the backend
-    useEffect(() => {
-        fetchItems()
-            .then(response => setItems(response.data))
-            .catch(err => console.error("Error fetching items:", err));
-    }, []);
-
-    // Add a new item
-    const handleAddItem = (name) => {
-        const newItem = { id: items.length + 1, name };
-        createItem(newItem)
-            .then(response => setItems([...items, response.data]))
-            .catch(err => console.error("Error adding item:", err));
-    };
-
-    // Delete an item
-    const handleDeleteItem = (id) => {
-        deleteItem(id)
-            .then(() => setItems(items.filter(item => item.id !== id)))
-            .catch(err => console.error("Error deleting item:", err));
-    };
-
+const App = () => {
     return (
-        <div>
-            <h1>React-FastAPI Integration</h1>
-            <AddItemForm onAdd={handleAddItem} />
-            <ItemList items={items} onDelete={handleDeleteItem} />
-        </div>
+        <Router>
+            <Header />
+            <main className="main-content">
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/insights" element={<InsightsPage />} />
+                </Routes>
+            </main>
+        </Router>
     );
-}
+};
 
 export default App;
